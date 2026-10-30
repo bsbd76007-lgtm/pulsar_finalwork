@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pulsar
+      POSTGRES_USER: pulsar
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pulsar_dev_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+  api:
+    build: .
+    command: uvicorn app.api:app --host 0.0.0.0 --port 8000
+    env_file: .env
+    ports:
+      - "8000:8000"
+  bot:
+    build: .
+    command: python -m app.bot
+    env_file: .env
+    depends_on:
+      - api
+volumes:
+  pgdata:
