@@ -2148,7 +2148,6 @@ async def community_text_router(message: Message):
 
     # PULSAR's original social RPG: a 24-hour world event, collectible cards, packs and a sell-back market.
     if command in {"мир pulsar", "мир", "событие", "ивент", "ивент дня", "событие дня"}:
-        import time
         event = community.world_event(cid)
         left = max(0, event["ends_at"] - int(time.time()))
         await message.answer(
@@ -2936,7 +2935,6 @@ async def menu_router(call: CallbackQuery):
         scope_id = call.from_user.id
         username = call.from_user.username or call.from_user.full_name
         if data == "world_event":
-            import time
             event = community.world_event(scope_id)
             left = max(0, event["ends_at"] - int(time.time()))
             text = (f"{CUSTOM_EMOJI['globe']} <b>СОБЫТИЕ PULSAR</b>\n\n{event['emoji']} <b>{html.escape(event['title'])}</b>\n"
